@@ -5,8 +5,6 @@ import shutil
 import zipfile
 
 from dashboard import dashboard
-from pages.ledger import ledger
-from pages.schedules import schedules
 
 from sidebar import gen_sidebar
 
