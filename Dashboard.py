@@ -1,9 +1,14 @@
+# main.py
+import streamlit as st
 # dashboard.py
 from datetime import datetime  
 import streamlit as st
 import os
 import shutil
 import random
+
+from sidebar import gen_sidebar
+
 from data import load_ledger_data, load_schedule_data, format_indian
 
 def dashboard():  
@@ -72,5 +77,24 @@ def dashboard():
 
    
 
-if __name__ == "__main__":
+def main():
+
+    _=st.set_page_config(
+        page_title="CAT Activity Tracker",
+        page_icon="🐈",
+        initial_sidebar_state="collapsed",
+        layout="centered",
+        ),
+
+    st.title(f"Cat Management :orange[Dashboard]")
+
     dashboard()
+
+    with st.sidebar:
+        gen_sidebar()
+
+
+
+
+if __name__ == "__main__":
+    main()
