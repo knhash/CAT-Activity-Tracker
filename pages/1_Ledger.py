@@ -62,8 +62,7 @@ def ledger():
                 key,
                 "₹{:,.2f}".format(value),
                 delta = "{:,.2f}%".format(float(value)/sum_of_amounts*100),
-                delta_color="off",
-                de
+                delta_color="off"
             )
         index += 1
 
