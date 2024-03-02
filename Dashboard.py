@@ -104,7 +104,7 @@ def dashboard():
     if not cabinet_data.empty:
         unavailable_items = cabinet_data[~cabinet_data.Available].Item.to_list()
         if unavailable_items:
-            
+            col_key, col_value = st.columns([2, 1])
             col_key.subheader(f"Cabinet :green[Exhausted]")
             col_value.subheader(f"`{unavailable_items}`")
 
