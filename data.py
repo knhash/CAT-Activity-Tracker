@@ -14,7 +14,8 @@ def load_ledger_data():
         ledger_data = pd.read_csv(LEDGER_FILE)
         ledger_data.Date = pd.to_datetime(ledger_data.Date).dt.date
         # Remove the comma in the amount column
-        ledger_data.Amount = ledger_data.Amount.str.replace(",", "")
+        if ledger_data.Amount.dtype == str:
+            ledger_data.Amount = ledger_data.Amount.str.replace(",", "")
         ledger_data.Amount = pd.to_numeric(ledger_data.Amount)
         ledger_data = ledger_data.sort_values(by="Date", ascending=False)
         return ledger_data
