@@ -1,15 +1,37 @@
-# main.py
 import streamlit as st
-# dashboard.py
 from datetime import datetime  
 import streamlit as st
 import os
 import shutil
 import random
+from PIL import Image, ImageDraw, ImageFilter
+
 
 from sidebar import gen_sidebar
 
 from data import load_ledger_data, load_schedule_data, format_indian, load_cabinet_data
+
+def crop_center(pil_img, crop_width, crop_height):
+    img_width, img_height = pil_img.size
+    return pil_img.crop(((img_width - crop_width) // 2,
+                         (img_height - crop_height) // 2,
+                         (img_width + crop_width) // 2,
+                         (img_height + crop_height) // 2))
+
+def crop_max_square(pil_img):
+    return crop_center(pil_img, min(pil_img.size), min(pil_img.size))
+
+def mask_circle_transparent(pil_img, blur_radius, offset=0):
+    offset = blur_radius * 2 + offset
+    mask = Image.new("L", pil_img.size, 0)
+    draw = ImageDraw.Draw(mask)
+    draw.ellipse((offset, offset, pil_img.size[0] - offset, pil_img.size[1] - offset), fill=255)
+    mask = mask.filter(ImageFilter.GaussianBlur(blur_radius))
+
+    result = pil_img.copy()
+    result.putalpha(mask)
+
+    return result
 
 def dashboard():  
     
@@ -19,11 +41,13 @@ def dashboard():
     st.subheader(":green[{}] the Poonai".format("Mindy"), divider="orange")
     pic, data = st.columns([1, 1])
     with pic:
+        image_path = None
         try:
             image_folder = "dataset/images/"
-            images = [f for f in os.listdir(image_folder) if os.path.isfile(os.path.join(image_folder, f))]
+            images = [f for f in os.listdir(image_folder) if os.path.isfile(os.path.join(image_folder, f)) and f != '.DS_Store']
             image_file = random.choice(images)
-            st.image(os.path.join(image_folder, image_file), use_column_width=True)
+            image_path = os.path.join(image_folder, image_file)
+            
         except:
             # Check if the image exists in the dataset
             if not os.path.exists("dataset/images/Mindy.png"):
@@ -34,8 +58,12 @@ def dashboard():
                 shutil.copy("Mindy.png", "dataset/images/Mindy.png")
                 if not os.path.exists("dataset/csvs"):
                     os.makedirs("dataset/csvs")
-
-            st.image("dataset/images/Mindy.png", use_column_width=True)
+            image_path  = "dataset/images/Mindy.png"
+        
+        image = Image.open(image_path)
+        resized = crop_max_square(image).resize((300, 300), Image.LANCZOS)
+        resized_circle = mask_circle_transparent(resized, 10)
+        st.image(resized_circle)
          
     with data:
         details = '''
