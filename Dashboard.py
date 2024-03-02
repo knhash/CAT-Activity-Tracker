@@ -16,6 +16,7 @@ def dashboard():
     # st.title("Cat Management :orange[Dashboard]")  
     # st.image("https://placekitten.com/200/200", width=200)  
     # st.write("Cat Name: Fluffy")  # Replace with the cat's name  
+    st.subheader(":green[{}] the Poonai".format("Mindy"), divider="orange")
     pic, data = st.columns([1, 1])
     with pic:
         try:
@@ -51,9 +52,7 @@ def dashboard():
             "cute": "💯",
         }
         '''
-        st.subheader(":green[{}] the Poonai".format("Mindy"), divider="rainbow")
         st.json(details)
-        st.divider()
         
         
     
