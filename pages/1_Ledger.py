@@ -6,21 +6,6 @@ from data import load_ledger_data, save_ledger_data
 from sidebar import gen_sidebar
 
 # Define a function to highlight alternate months
-def highlight_alternate_months(data):
-    attr = 'background-color: {}'
-    color = 'pink'
-    other_color = ''
-    is_highlight = False
-    month = None
-    output = pd.DataFrame(attr.format(other_color), index=data.index, columns=data.columns)
-    for index, row in data.iterrows():
-        date = row['Date']
-        if month is None or date.month != month:
-            is_highlight = not is_highlight
-            month = date.month
-        if is_highlight:
-            output.loc[index, :] = attr.format(color)
-    return output
 
 def ledger():  
     # st.title("Cat Management :orange[Ledger]")  
@@ -74,14 +59,23 @@ def ledger():
 
     # All transactions
     st.subheader("All transactions", divider="rainbow")  
-    styled_ledger_data = ledger_data.style.apply(highlight_alternate_months, axis=None)
-    styled_ledger_data = styled_ledger_data.format({"Amount": "₹{:,.0f}"})
-    st.dataframe(
-        styled_ledger_data, 
+    # ledger_data['Amount'] = ledger_data['Amount'].apply(lambda x: "₹{:,.0f}".format(x))
+    # st.dataframe(
+    #     ledger_data, 
+    #     use_container_width=True, 
+    #     hide_index=True,
+    #     column_order=("Date", "Category", "Description", "Amount")
+    #     )  
+    ledger_data_edited = st.data_editor(
+        ledger_data, 
         use_container_width=True, 
         hide_index=True,
-        column_order=("Date", "Category", "Amount")
-        )  
+        column_order=("Date", "Category", "Amount", "Description"),
+        num_rows="dynamic",
+        disabled=("Date", "Category", "Amount", "Description"),
+    )
+    if ledger_data_edited is not None:
+        save_ledger_data(ledger_data_edited)
 
 def main():
 
