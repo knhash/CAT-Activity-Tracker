@@ -5,6 +5,9 @@ from datetime import datetime
 DATA_PATH = "dataset"
 LEDGER_FILE = DATA_PATH+"/csvs/ledger.csv"
 SCHEDULE_FILE = DATA_PATH+"/csvs/schedules.csv"
+CABINET_FILE = DATA_PATH+"/csvs/cabinet.csv"
+
+####################### Ledger #######################
 
 def load_ledger_data():
     try:
@@ -21,6 +24,8 @@ def load_ledger_data():
 def save_ledger_data(data):
     data.to_csv(LEDGER_FILE, index=False)
 
+####################### Schedules #######################
+
 def load_schedule_data():
     try:
         schedules = pd.read_csv(SCHEDULE_FILE)
@@ -35,6 +40,24 @@ def load_schedule_data():
 
 def save_schedule_data(data):
     data.to_csv(SCHEDULE_FILE, index=False)
+
+####################### Cabinet #######################
+    
+def load_cabinet_data():
+    try:
+        cabinet = pd.read_csv(CABINET_FILE)
+        return cabinet
+    except FileNotFoundError:
+        return pd.DataFrame(columns=["Item", "Purpose", "Available"])
+    except Exception as e:
+        print(e)
+        return pd.DataFrame(columns=["Item", "Purpose", "Available"])
+
+def save_cabinet_data(data):
+    data.to_csv(CABINET_FILE, index=False)
+
+
+####################### Utilities #######################
 
 def format_indian(number):
     number = str(number).split(".")[0]

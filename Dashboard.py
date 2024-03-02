@@ -9,7 +9,7 @@ import random
 
 from sidebar import gen_sidebar
 
-from data import load_ledger_data, load_schedule_data, format_indian
+from data import load_ledger_data, load_schedule_data, format_indian, load_cabinet_data
 
 def dashboard():  
     
@@ -60,6 +60,7 @@ def dashboard():
     # Load ledger and schedule data  
     ledger_data = load_ledger_data()  
     schedule_data = load_schedule_data()  
+    cabinet_data = load_cabinet_data()
 
     st.divider()        
 
@@ -68,11 +69,23 @@ def dashboard():
 
     if not schedule_data.empty:  
         next_schedule = schedule_data.loc[schedule_data["Date"] >= datetime.now().date()].sort_values(by="Date").iloc[0]  
-        st.subheader(f"Task :green[{next_schedule.Description}] is scheduled on `{next_schedule.Date}`")
+        col_key, col_value = st.columns([2, 1])
+        col_key.subheader(f"Task :green[{next_schedule.Description}] is scheduled")
+        col_value.subheader(f"`{next_schedule.Date.strftime('%d %B %Y')}`")
+
+    if not cabinet_data.empty:
+        unavailable_items = cabinet_data[~cabinet_data.Available].Item.to_list()
+        if unavailable_items:
+            
+            col_key.subheader(f"Cabinet :green[Exhausted]")
+            col_value.subheader(f"`{unavailable_items}`")
 
     if not ledger_data.empty:  
         total_expenses = ledger_data["Amount"].sum()  
-        st.subheader(f"Net expenses YTD: `₹{format_indian(total_expenses)}`")      
+        col_key, col_value = st.columns([2, 1])
+        col_key.subheader(f"Net expenses :green[YTD]")
+        col_value.subheader(f"`₹{format_indian(total_expenses)}`")
+
 
    
 
