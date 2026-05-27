@@ -18,8 +18,8 @@ mdurl==0.1.2
 numpy==1.26.4
 packaging==23.2
 pandas==2.2.1
-pillow==12.1.1
-protobuf==4.25.8
+pillow==12.2.0
+protobuf==5.29.6
 pyarrow==15.0.0
 pydeck==0.8.1b0
 Pygments==2.20.0
@@ -35,11 +35,11 @@ streamlit==1.54.0
 tenacity==8.2.3
 toml==0.10.2
 toolz==0.12.1
-tornado==6.5
+tornado==6.5.5
 typing_extensions==4.10.0
 tzdata==2024.1
 tzlocal==5.2
-urllib3==2.5.0
+urllib3==2.7.0
 validators==0.22.0
 watchdog==4.0.0
 zipp==3.19.1
